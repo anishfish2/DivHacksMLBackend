@@ -46,17 +46,16 @@ def sarcasm():
         bagResults = [results['neg'], results['neu'], results['pos']]
 
         if np.argmax(bagResults) == 2:
-            return "Positive Sentiment"
+            return "Positive"
         elif np.argmax(bagResults) == 1:
-            return "Neutral Sentiment"
+            return "Neutral"
         else:
-            return "Negative Sentiment"
+            return "Negative"
 
 @app.route('/summary/', methods = ['POST'])
 def summary():
     x = request.get_json()["text"]
-    openai.api_key = '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'
-
+    openai.api_key = '<openai.api_key>'
     default = "Summarize this as short as possible:"
     actualText = x
 
