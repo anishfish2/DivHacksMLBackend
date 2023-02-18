@@ -12,6 +12,8 @@ import sentiment
 import nltk
 from nltk.sentiment import SentimentIntensityAnalyzer
 import numpy as np
+import os
+import openai
 
 app = Flask(__name__)
 CORS(app)
@@ -50,6 +52,28 @@ def sarcasm():
         else:
             return "Negative Sentiment"
 
-    
+@app.route('/summary/', methods = ['POST'])
+def summary():
+    x = request.get_json()["text"]
+    openai.api_key = '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'
+
+    default = "Summarize this as short as possible:"
+    actualText = x
+
+    response = openai.Completion.create(
+    model="text-davinci-003",
+    prompt= default + "\n\n" + actualText,
+    temperature=0.7,
+    max_tokens=256,
+    top_p=1,
+    frequency_penalty=0,
+    presence_penalty=0
+    )
+
+    answer = response["choices"][0]["text"]
+    return answer
+
+
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=environ["PORT"])
+    app.run(host='0.0.0.0', port=8000)
