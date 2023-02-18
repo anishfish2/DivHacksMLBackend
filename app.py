@@ -29,25 +29,33 @@ def test():
 @app.route('/sarcasm/', methods = ['POST'])
 def sarcasm():
     x = request.get_json()["text"]
+    sentences = x.split(".")
+    sentences2 = x.split(".")
     x2 = request.get_json()["text"]
     print(x)
     cv = pickle.load(open("./models/vectorizer.pickle", 'rb')) 
 
     filename = 'models/lgModel.sav'
     loaded_model = pickle.load(open(filename, 'rb'))
-    x = cv.transform([x])
-    output = loaded_model.predict(x)[0]
-    if output == 1:
+    results = []
+    for i in sentences:
+        x = cv.transform([i])
+        output = loaded_model.predict(x)[0]
+        results.append(output)
+    
+    output = np.average([int(i) for i in results])
+    if output > .3:
         return "Sarcastic"
     else:
         sia = SentimentIntensityAnalyzer()
-
-        results = sia.polarity_scores(x2)
-        bagResults = [results['neg'], results['neu'], results['pos']]
-
-        if np.argmax(bagResults) == 2:
+        bigBag = []
+        for i in sentences2:
+            results = sia.polarity_scores(i)
+            bagResults = [results['neg'], results['neu'], results['pos']]
+            bigBag.append(np.argmax(bagResults))
+        if np.average(bigBag) > 1:
             return "Positive"
-        elif np.argmax(bagResults) == 1:
+        elif np.average(bigBag) > .75:
             return "Neutral"
         else:
             return "Negative"
