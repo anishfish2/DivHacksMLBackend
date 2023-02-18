@@ -4,6 +4,10 @@ import numpy as np
 
 
 sia = SentimentIntensityAnalyzer()
+
+def yay (text):
+    return f"yay {text} !!!!"
+
 results = sia.polarity_scores("Wow, NLTK sucks ass!")
 bagResults = [results['neg'], results['neu'], results['pos']]
 
