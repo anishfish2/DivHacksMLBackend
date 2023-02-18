@@ -1,2 +1,2 @@
-# DivHacksMLBackend
-ML Backend for DivHacks 2023
+# DivHacksML
+ML section of DivHacks2023 Hackathon Project
